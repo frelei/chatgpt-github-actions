@@ -15,7 +15,7 @@ parser.add_argument('--github_pr_id', help='Your Github PR ID')
 parser.add_argument('--openai_engine', default="text-davinci-002", help='GPT-3 model to use. Options: text-davinci-002, text-babbage-001, text-curie-001, text-ada-001')
 parser.add_argument('--openai_temperature', default=0.2, help='Sampling temperature to use. Higher values means the model will take more risks. Recommended: 0.5')
 parser.add_argument('--openai_max_tokens', default=2048, help='The maximum number of tokens to generate in the completion.')
-parser.add_argument('--mode', default="files", help='PR interpretation form. Options: files, patch')
+parser.add_argument('--mode', default="patch", help='PR interpretation form. Options: files, patch')
 args = parser.parse_args()
 
 ## Authenticating with the OpenAI API
@@ -40,7 +40,7 @@ def files():
             content = repo.get_contents(filename, ref=commit.sha).decoded_content
 
             # Sending the code to ChatGPT
-            response = openai.Completion.create(
+            response = openai.ChatCompletion.create(
                 engine=args.openai_engine,
                 prompt=(f"Review the code finding improvements and issues:\n```{content}```"),
                 temperature=float(args.openai_temperature),
@@ -72,9 +72,9 @@ def patch():
             file_name = diff_text.split("b/")[1].splitlines()[0]
             print(file_name)
 
-            response = openai.Completion.create(
+            response = openai.ChatCompletion.create(
                 engine=args.openai_engine,
-                prompt=(f"Summarize what was done in this diff:\n```{diff_text}```"),
+                prompt=(f"Review the code finding improvements and issues:\n```{diff_text}```"),
                 temperature=float(args.openai_temperature),
                 max_tokens=int(args.openai_max_tokens)
             )
