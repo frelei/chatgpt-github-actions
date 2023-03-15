@@ -76,7 +76,7 @@ def patch():
                 model=args.openai_engine,
                 message=[
                     {"role": "user", "content": "Review the code finding improvements and issues:\n```{diff_text}```"}
-                ]
+                ],
                 #(f"Review the code finding improvements and issues:\n```{diff_text}```"),
                 temperature=float(args.openai_temperature),
                 max_tokens=int(args.openai_max_tokens)
