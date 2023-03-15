@@ -41,7 +41,7 @@ def files():
 
             # Sending the code to ChatGPT
             response = openai.ChatCompletion.create(
-                engine=args.openai_engine,
+                model=args.openai_engine,
                 prompt=(f"Review the code finding improvements and issues:\n```{content}```"),
                 temperature=float(args.openai_temperature),
                 max_tokens=int(args.openai_max_tokens)
@@ -73,16 +73,20 @@ def patch():
             print(file_name)
 
             response = openai.ChatCompletion.create(
-                engine=args.openai_engine,
-                prompt=(f"Review the code finding improvements and issues:\n```{diff_text}```"),
+                model=args.openai_engine,
+                message=[
+                    {"role": "user", "content": "Review the code finding improvements and issues:\n```{diff_text}```"}
+                ]
+                #(f"Review the code finding improvements and issues:\n```{diff_text}```"),
                 temperature=float(args.openai_temperature),
                 max_tokens=int(args.openai_max_tokens)
             )
             print(response)
-            print(response['choices'][0]['text'])
+            # print(response['choices'][0]['text'])
+            print(response['choices'][0]['message']['content'])
 
             pull_request.create_issue_comment(
-                f"ChatGPT's response about ``{file_name}``:\n {response['choices'][0]['text']}")
+                f"ChatGPT's response about ``{file_name}``:\n {response['choices'][0]['message']['content']}")
         except Exception as e:
             error_message = str(e)
             print(error_message)
