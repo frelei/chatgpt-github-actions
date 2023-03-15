@@ -74,7 +74,7 @@ def patch():
 
             response = openai.ChatCompletion.create(
                 model=args.openai_engine,
-                message=[
+                messages=[
                     {"role": "user", "content": "Review the code finding improvements and issues:\n```{diff_text}```"}
                 ],
                 #(f"Review the code finding improvements and issues:\n```{diff_text}```"),
