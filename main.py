@@ -26,7 +26,8 @@ g = Github(args.github_token)
 
 
 def files():
-    repo = g.get_repo(os.getenv('GITHUB_REPOSITORY'))
+    # repo = g.get_repo(os.getenv('GITHUB_REPOSITORY'))
+    repo = g.get_repo('kobeapps/merx')
     pull_request = repo.get_pull(int(args.github_pr_id))
 
     ## Loop through the commits in the pull request
@@ -53,7 +54,8 @@ def files():
 
 
 def patch():
-    repo = g.get_repo(os.getenv('GITHUB_REPOSITORY'))
+    print(os.getenv('GITHUB_REPOSITORY'))
+    repo = g.get_repo('kobeapps/merx')
     pull_request = repo.get_pull(int(args.github_pr_id))
 
     content = get_content_patch()
@@ -75,7 +77,7 @@ def patch():
             response = openai.ChatCompletion.create(
                 model=args.openai_engine,
                 messages=[
-                    {"role": "user", "content": "Review the code finding improvements and issues:\n```{diff_text}```"}
+                    {"role": "user", "content": "Review the code and find improvements and issues:\n```{diff_text}```"}
                 ],
                 #(f"Review the code finding improvements and issues:\n```{diff_text}```"),
                 temperature=float(args.openai_temperature),
