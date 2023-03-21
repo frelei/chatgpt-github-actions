@@ -38,23 +38,26 @@ def files():
         for file in files:
             # Getting the file name and content
             filename = file.filename
+            print(file_name)
             content = repo.get_contents(filename, ref=commit.sha).decoded_content
 
             # Sending the code to ChatGPT
             response = openai.ChatCompletion.create(
                 model=args.openai_engine,
-                prompt=(f"Review the code finding improvements and issues:\n```{content}```"),
+                # prompt=(f"Review the code finding improvements and issues:\n```{content}```"),
+                 messages=[
+                    {"role": "user", "content": "Review the code and find improvements and issues:\n```{content}```"}
+                ],
                 temperature=float(args.openai_temperature),
                 max_tokens=int(args.openai_max_tokens)
             )
 
             # Adding a comment to the pull request with ChatGPT's response
+            print(response)
             pull_request.create_issue_comment(
-                f"ChatGPT's response about `{file.filename}`:\n {response['choices'][0]['text']}")
-
+                f"ChatGPT's response about `{file.filename}`:\n {response['choices'][0]['message']['content']}")
 
 def patch():
-    print(os.getenv('GITHUB_REPOSITORY'))
     repo = g.get_repo('kobeapps/merx')
     pull_request = repo.get_pull(int(args.github_pr_id))
 
