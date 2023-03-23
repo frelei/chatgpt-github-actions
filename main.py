@@ -39,23 +39,27 @@ def files():
             # Getting the file name and content
             filename = file.filename
             print(filename)
-            content = repo.get_contents(filename, ref=commit.sha).decoded_content
-            print(content)
-            # Sending the code to ChatGPT
-            response = openai.ChatCompletion.create(
-                model=args.openai_engine,
-                # prompt=(f"Review the code finding improvements and issues:\n```{content}```"),
-                 messages=[
-                    {"role": "user", "content": "Review the code and find improvements and issues:\n```{content}```"}
-                ],
-                temperature=float(args.openai_temperature),
-                max_tokens=int(args.openai_max_tokens)
-            )
+            try:
+                content = repo.get_contents(filename, ref=commit.sha).decoded_content
+                print(content)
+                # Sending the code to ChatGPT
+                response = openai.ChatCompletion.create(
+                    model=args.openai_engine,
+                    # prompt=(f"Review the code finding improvements and issues:\n```{content}```"),
+                    messages=[
+                        {"role": "user", "content": "Review the code and find improvements and issues:\n```{content}```"}
+                    ],
+                    temperature=float(args.openai_temperature),
+                    max_tokens=int(args.openai_max_tokens)
+                )
 
-            # Adding a comment to the pull request with ChatGPT's response
-            print(response)
-            pull_request.create_issue_comment(
-                f"ChatGPT's response about `{filename}`:\n {response['choices'][0]['message']['content']}")
+                # Adding a comment to the pull request with ChatGPT's response
+                print(response)
+                pull_request.create_issue_comment(
+                    f"ChatGPT's response about `{filename}`:\n {response['choices'][0]['message']['content']}")
+            except Exception as e:
+                error_message = str(e)
+                print(error_message)
 
 def patch():
     repo = g.get_repo('kobeapps/merx')
