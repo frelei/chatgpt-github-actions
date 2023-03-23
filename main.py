@@ -120,7 +120,7 @@ def get_content_patch():
 
 
 if (args.mode == "files"):
-    files()
+    patch()
 
 if (args.mode == "patch"):
     patch()
