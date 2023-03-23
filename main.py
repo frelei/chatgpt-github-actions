@@ -90,7 +90,7 @@ def patch():
                 ],
                 #(f"Review the code finding improvements and issues:\n```{diff_text}```"),
                 temperature=float(0.7),
-                max_tokens=int(4096)
+                max_tokens=int(3500)
                     # temperature=float(args.openai_temperature),
                     # max_tokens=int(args.openai_max_tokens)
             )
