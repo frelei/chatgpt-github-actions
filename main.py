@@ -38,7 +38,7 @@ def files():
         for file in files:
             # Getting the file name and content
             filename = file.filename
-            print(file_name)
+            print(filename)
             content = repo.get_contents(filename, ref=commit.sha).decoded_content
 
             # Sending the code to ChatGPT
