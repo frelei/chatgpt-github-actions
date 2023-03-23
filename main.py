@@ -40,7 +40,7 @@ def files():
             filename = file.filename
             print(filename)
             content = repo.get_contents(filename, ref=commit.sha).decoded_content
-
+            print(content)
             # Sending the code to ChatGPT
             response = openai.ChatCompletion.create(
                 model=args.openai_engine,
@@ -55,7 +55,7 @@ def files():
             # Adding a comment to the pull request with ChatGPT's response
             print(response)
             pull_request.create_issue_comment(
-                f"ChatGPT's response about `{file.filename}`:\n {response['choices'][0]['message']['content']}")
+                f"ChatGPT's response about `{filename}`:\n {response['choices'][0]['message']['content']}")
 
 def patch():
     repo = g.get_repo('kobeapps/merx')
