@@ -80,7 +80,7 @@ def patch():
         try:
             file_name = diff_text.split("b/")[1].splitlines()[0]
             print(file_name)
-
+            print(diff_text)
             response = openai.ChatCompletion.create(
                 model=args.openai_engine,
                 messages=[
@@ -103,7 +103,7 @@ def patch():
 
 
 def get_content_patch():
-    url = f"https://api.github.com/repos/{os.getenv('GITHUB_REPOSITORY')}/pulls/{args.github_pr_id}"
+    url = f"https://api.github.com/repos/kobeapps/merx/pulls/{args.github_pr_id}"
     print(url)
 
     headers = {
@@ -115,7 +115,7 @@ def get_content_patch():
 
     if response.status_code != 200:
         raise Exception(response.text)
-
+    print(response)
     return response.text
 
 
