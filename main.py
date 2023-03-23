@@ -84,7 +84,7 @@ def patch():
             response = openai.ChatCompletion.create(
                 model=args.openai_engine,
                 messages=[
-                    {"role": "user", "content": "Review the code and find improvements and issues:\n```{diff_text}```"}
+                    {"role": "user", "content": "Review the code in the pull request and find improvements and issues:\n```{diff_text}```"}
                 ],
                 #(f"Review the code finding improvements and issues:\n```{diff_text}```"),
                 temperature=float(args.openai_temperature),
@@ -115,7 +115,7 @@ def get_content_patch():
 
     if response.status_code != 200:
         raise Exception(response.text)
-    print(response)
+    print(response.text)
     return response.text
 
 
